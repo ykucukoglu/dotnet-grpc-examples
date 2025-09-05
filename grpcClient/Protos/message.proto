@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option csharp_namespace ="grpcMessageClient";
+
+package message;
+
+service Message{
+    //Basit istek-yanıt
+    rpc SendMessage(MessageRequest) returns (MessageResponse);
+
+    //Belirli bir kullanıcının mesajlarını listeleme
+    rpc GetMessage (GetMessageRequest) returns (GetMessageResponse);
+
+    //Sunucu tarafından stream: yeni mesajları dinleme
+    rpc SubscribeMessages (SubscribeRequest) returns (stream MessageResponse);
+
+    //Çift yönlü stream: sohbet
+    rpc Chat (stream MessageRequest) returns (stream MessageResponse);
+}
+
+message MessageRequest{
+    string sender = 1;
+    string text = 2;
+    int64 timestamp = 3;
+}
+
+message MessageResponse{
+    string id = 1;
+    string sender =2;
+    string text = 3;
+    int64 timestamp = 4;
+}
+
+message GetMessageRequest{
+    string sender =1;
+    int32 limit =2;
+}
+
+message GetMessageResponse{
+    repeated MessageResponse messages = 1;
+}
+
+message SubscribeRequest{
+    string channel = 1;
+}
